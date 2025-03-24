@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Привет из Telegram Mini App! ✨</h2>
+    <div class="info" id="userInfo">Загрузка данных...</div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Делает WebApp на весь экран
+
+        const user = tg.initDataUnsafe.user;
+        const infoDiv = document.getElementById("userInfo");
+
+        if (user) {
+            infoDiv.innerHTML = `
+                <b>ID:</b> ${user.id}<br>
+                <b>Имя:</b> ${user.first_name} ${user.last_name || ''}<br>
+                <b>Username:</b> @${user.username || '—'}
+            `;
+        } else {
+            infoDiv.innerHTML = "Не удалось получить данные пользователя.";
+        }
+    </script>
+</body>
+</html>
