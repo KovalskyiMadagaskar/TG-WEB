@@ -16,14 +16,6 @@
             margin-bottom: 30px;
         }
 
-        .info {
-            margin-top: 20px;
-            margin-bottom: 40px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-
         .menu-button {
             display: block;
             width: 200px;
@@ -41,46 +33,88 @@
         .menu-button:hover {
             background-color: #0077b3;
         }
+
+        .input-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .input-section input {
+            padding: 10px;
+            font-size: 16px;
+            width: 180px;
+            margin-bottom: 10px;
+        }
+
+        .input-section button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #00b894;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <h2>Привет из Telegram Mini App! ✨</h2>
-    
-    <div class="info" id="userInfo">Загрузка данных...</div>
+    <h2>Добро пожаловать! ✨</h2>
 
-    <button class="menu-button" onclick="handleAction('deposit')">💰 Пополнить</button>
-    <button class="menu-button" onclick="handleAction('withdraw')">💸 Вывести</button>
+    <button class="menu-button" onclick="showSection('deposit')">💰 Пополнить</button>
+    <button class="menu-button" onclick="showSection('withdraw')">💸 Вывести</button>
     <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
+
+    <div class="input-section" id="depositSection">
+        <input type="number" id="depositAmount" placeholder="Введите сумму пополнения" />
+        <br>
+        <button onclick="submitDeposit()">Подтвердить</button>
+    </div>
+
+    <div class="input-section" id="withdrawSection">
+        <input type="number" id="withdrawAmount" placeholder="Введите сумму вывода" />
+        <br>
+        <button onclick="submitWithdraw()">Подтвердить</button>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const user = tg.initDataUnsafe.user;
-        const infoDiv = document.getElementById("userInfo");
+        function showSection(type) {
+            document.getElementById("depositSection").style.display = "none";
+            document.getElementById("withdrawSection").style.display = "none";
 
-        if (user) {
-            infoDiv.innerHTML = `
-                <b>ID:</b> ${user.id}<br>
-                <b>Имя:</b> ${user.first_name} ${user.last_name || ''}<br>
-                <b>Username:</b> @${user.username || '—'}
-            `;
-        } else {
-            infoDiv.innerHTML = "Не удалось получить данные пользователя.";
+            if (type === 'deposit') {
+                document.getElementById("depositSection").style.display = "block";
+            } else if (type === 'withdraw') {
+                document.getElementById("withdrawSection").style.display = "block";
+            }
+        }
+
+        function submitDeposit() {
+            const amount = document.getElementById("depositAmount").value;
+            if (!amount || amount <= 0) {
+                tg.showAlert("Введите корректную сумму для пополнения");
+                return;
+            }
+
+            tg.sendData(JSON.stringify({ action: "deposit", amount }));
+            tg.showAlert(`Вы хотите пополнить на ${amount}₽`);
+        }
+
+        function submitWithdraw() {
+            const amount = document.getElementById("withdrawAmount").value;
+            if (!amount || amount <= 0) {
+                tg.showAlert("Введите корректную сумму для вывода");
+                return;
+            }
+
+            tg.sendData(JSON.stringify({ action: "withdraw", amount }));
+            tg.showAlert(`Вы хотите вывести ${amount}₽`);
         }
 
         function handleAction(action) {
-            switch (action) {
-                case 'deposit':
-                    tg.showAlert('Вы выбрали "Пополнить"');
-                    break;
-                case 'withdraw':
-                    tg.showAlert('Вы выбрали "Вывести"');
-                    break;
-                case 'profile':
-                    tg.showAlert('Вы выбрали "Личный кабинет"');
-                    break;
-            }
+            tg.showAlert(`Вы выбрали "${action === 'profile' ? 'Личный кабинет' : action}"`);
         }
     </script>
 </body>
