@@ -31,6 +31,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Получаем club_id из параметров URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const clubId = urlParams.get("club_id");
+
         let currentAction = "";
         let currentAmount = 0;
 
@@ -56,13 +60,20 @@
 
         function submitWithMethod(method) {
             const data = {
+                club_id: clubId,
                 action: currentAction,
                 amount: currentAmount,
                 method: method,
                 currency: "KZT"
             };
             tg.sendData(JSON.stringify(data));
-            tg.showAlert(`Вы выбрали ${currentAction === 'deposit' ? 'пополнение' : 'вывод'} на ${currentAmount}₸ через ${method === 'kaspi' ? 'Каспи' : 'карту другого банка'}`);
+
+            const methodText = method === 'kaspi' ? 'Каспи' : 'карту другого банка';
+            const actionText = currentAction === 'deposit' ? 'пополнение' : 'вывод';
+
+            tg.showAlert(
+                `Вы выбрали ${actionText} на ${currentAmount}₸ через ${methodText}\nID клуба: ${clubId}`
+            );
         }
 
         function handleAction(action) {
