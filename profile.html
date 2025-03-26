@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>👤 Личный кабинет</h2>
+
+    <div class="info" id="profileInfo">Загрузка данных...</div>
+
+    <button class="confirm-button" onclick="goBack()">🔙 Назад</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const clubId = urlParams.get("club_id");
+
+        const user = tg.initDataUnsafe.user;
+        const infoDiv = document.getElementById("profileInfo");
+
+        if (user) {
+            infoDiv.innerHTML = `
+                <b>ID:</b> ${user.id}<br>
+                <b>Имя:</b> ${user.first_name} ${user.last_name || ''}<br>
+                <b>Username:</b> @${user.username || '—'}<br>
+                <b>Язык:</b> ${user.language_code}<br>
+                <b>ID клуба:</b> ${clubId || 'не передан'}
+            `;
+        } else {
+            infoDiv.innerText = "Не удалось получить данные пользователя.";
+        }
+
+        function goBack() {
+            window.location.href = `index.html?club_id=${clubId}`;
+        }
+    </script>
+</body>
+</html>

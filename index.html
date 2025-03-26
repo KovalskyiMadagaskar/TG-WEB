@@ -12,7 +12,7 @@
     <div class="menu" id="menuButtons">
         <button class="menu-button" onclick="startAction('deposit')">💰 Пополнить</button>
         <button class="menu-button" onclick="startAction('withdraw')">💸 Вывести</button>
-        <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
+        <button class="menu-button" onclick="goToProfile()">👤 Личный кабинет</button>
     </div>
 
     <div class="input-section" id="amountSection">
@@ -56,6 +56,11 @@
             currentAmount = amount;
             document.getElementById("amountSection").style.display = "none";
             document.getElementById("methodSection").style.display = "block";
+        }
+
+        function goToProfile() {
+            const clubId = urlParams.get("club_id");
+            window.location.href = `profile.html?club_id=${clubId}`;
         }
 
         function submitWithMethod(method) {
