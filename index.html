@@ -38,19 +38,19 @@
             background-color: #0077b3;
         }
 
-        .input-section {
+        .input-section, .method-section {
             margin-top: 20px;
             display: none;
         }
 
-        .input-section input {
+        input[type="number"] {
             padding: 10px;
             font-size: 16px;
             width: 180px;
             margin-bottom: 10px;
         }
 
-        .input-section button {
+        .confirm-button {
             padding: 10px 20px;
             font-size: 16px;
             border: none;
@@ -59,69 +59,91 @@
             color: white;
             cursor: pointer;
         }
+
+        .method-button {
+            display: block;
+            width: 250px;
+            margin: 10px auto;
+            padding: 12px;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #6c5ce7;
+            color: white;
+            cursor: pointer;
+        }
+
+        .method-button:hover {
+            background-color: #5a4dbd;
+        }
     </style>
 </head>
 <body>
     <h2>Добро пожаловать! ✨</h2>
 
     <div class="menu" id="menuButtons">
-        <button class="menu-button" onclick="showSection('deposit')">💰 Пополнить</button>
-        <button class="menu-button" onclick="showSection('withdraw')">💸 Вывести</button>
+        <button class="menu-button" onclick="startAction('deposit')">💰 Пополнить</button>
+        <button class="menu-button" onclick="startAction('withdraw')">💸 Вывести</button>
         <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
     </div>
 
-    <div class="input-section" id="depositSection">
-        <input type="number" id="depositAmount" placeholder="Введите сумму в ₸" />
+    <!-- Ввод суммы -->
+    <div class="input-section" id="amountSection">
+        <input type="number" id="amountInput" placeholder="Введите сумму в ₸" />
         <br>
-        <button onclick="submitDeposit()">Подтвердить</button>
+        <button class="confirm-button" onclick="confirmAmount()">Далее</button>
     </div>
 
-    <div class="input-section" id="withdrawSection">
-        <input type="number" id="withdrawAmount" placeholder="Введите сумму в ₸" />
-        <br>
-        <button onclick="submitWithdraw()">Подтвердить</button>
+    <!-- Выбор метода -->
+    <div class="method-section" id="methodSection">
+        <h3>Выберите способ</h3>
+        <button class="method-button" onclick="submitWithMethod('kaspi')">Каспи</button>
+        <button class="method-button" onclick="submitWithMethod('card')">Карта другого банка</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function showSection(type) {
-            // Скрываем меню кнопок
+        let currentAction = ""; // deposit / withdraw
+        let currentAmount = 0;
+
+        function startAction(action) {
+            currentAction = action;
+            currentAmount = 0;
+
+            // Скрываем меню и всё остальное
             document.getElementById("menuButtons").style.display = "none";
-
-            // Скрываем все input-секции
-            document.getElementById("depositSection").style.display = "none";
-            document.getElementById("withdrawSection").style.display = "none";
-
-            // Показываем нужную
-            if (type === 'deposit') {
-                document.getElementById("depositSection").style.display = "block";
-            } else if (type === 'withdraw') {
-                document.getElementById("withdrawSection").style.display = "block";
-            }
+            document.getElementById("amountSection").style.display = "block";
+            document.getElementById("methodSection").style.display = "none";
         }
 
-        function submitDeposit() {
-            const amount = document.getElementById("depositAmount").value;
+        function confirmAmount() {
+            const input = document.getElementById("amountInput");
+            const amount = parseFloat(input.value);
+
             if (!amount || amount <= 0) {
-                tg.showAlert("Введите корректную сумму для пополнения");
+                tg.showAlert("Введите корректную сумму в тенге");
                 return;
             }
 
-            tg.sendData(JSON.stringify({ action: "deposit", amount, currency: "KZT" }));
-            tg.showAlert(`Вы хотите пополнить на ${amount}₸`);
+            currentAmount = amount;
+
+            // Переход к выбору метода
+            document.getElementById("amountSection").style.display = "none";
+            document.getElementById("methodSection").style.display = "block";
         }
 
-        function submitWithdraw() {
-            const amount = document.getElementById("withdrawAmount").value;
-            if (!amount || amount <= 0) {
-                tg.showAlert("Введите корректную сумму для вывода");
-                return;
-            }
+        function submitWithMethod(method) {
+            const data = {
+                action: currentAction,
+                amount: currentAmount,
+                method: method, // 'kaspi' или 'card'
+                currency: "KZT"
+            };
 
-            tg.sendData(JSON.stringify({ action: "withdraw", amount, currency: "KZT" }));
-            tg.showAlert(`Вы хотите вывести ${amount}₸`);
+            tg.sendData(JSON.stringify(data));
+            tg.showAlert(`Вы выбрали ${currentAction === 'deposit' ? 'пополнение' : 'вывод'} на ${currentAmount}₸ через ${method === 'kaspi' ? 'Каспи' : 'карту другого банка'}`);
         }
 
         function handleAction(action) {
