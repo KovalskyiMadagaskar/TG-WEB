@@ -9,29 +9,35 @@
 <body>
     <h2>Добро пожаловать! ✨</h2>
 
+    <!-- Главное меню -->
     <div class="menu" id="menuButtons">
         <button class="menu-button" onclick="startAction('deposit')">💰 Пополнить</button>
         <button class="menu-button" onclick="startAction('withdraw')">💸 Вывести</button>
         <button class="menu-button" onclick="goToProfile()">👤 Личный кабинет</button>
     </div>
 
+    <!-- Ввод суммы -->
     <div class="input-section" id="amountSection">
         <input type="number" id="amountInput" placeholder="Введите сумму в ₸" />
         <br>
         <button class="confirm-button" onclick="confirmAmount()">Далее</button>
+        <br>
+        <button class="back-button" onclick="backToMenu()">🔙 Назад</button>
     </div>
 
+    <!-- Выбор способа -->
     <div class="method-section" id="methodSection">
         <h3>Выберите способ</h3>
         <button class="method-button" onclick="submitWithMethod('kaspi')">Каспи</button>
         <button class="method-button" onclick="submitWithMethod('card')">Карта другого банка</button>
+        <br>
+        <button class="back-button" onclick="backToAmount()">🔙 Назад</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Получаем club_id из параметров URL
         const urlParams = new URLSearchParams(window.location.search);
         const clubId = urlParams.get("club_id");
 
@@ -58,11 +64,6 @@
             document.getElementById("methodSection").style.display = "block";
         }
 
-        function goToProfile() {
-            const clubId = urlParams.get("club_id");
-            window.location.href = `profile.html?club_id=${clubId}`;
-        }
-
         function submitWithMethod(method) {
             const data = {
                 club_id: clubId,
@@ -81,8 +82,18 @@
             );
         }
 
-        function handleAction(action) {
-            tg.showAlert(`Вы выбрали "${action === 'profile' ? 'Личный кабинет' : action}"`);
+        function backToMenu() {
+            document.getElementById("amountSection").style.display = "none";
+            document.getElementById("menuButtons").style.display = "block";
+        }
+
+        function backToAmount() {
+            document.getElementById("methodSection").style.display = "none";
+            document.getElementById("amountSection").style.display = "block";
+        }
+
+        function goToProfile() {
+            window.location.href = `profile.html?club_id=${clubId}`;
         }
     </script>
 </body>
