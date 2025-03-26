@@ -11,21 +11,50 @@
             padding: 20px;
             text-align: center;
         }
+
+        h2 {
+            margin-bottom: 30px;
+        }
+
         .info {
             margin-top: 20px;
+            margin-bottom: 40px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 10px;
+        }
+
+        .menu-button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #0088cc;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-button:hover {
+            background-color: #0077b3;
         }
     </style>
 </head>
 <body>
     <h2>Привет из Telegram Mini App! ✨</h2>
+    
     <div class="info" id="userInfo">Загрузка данных...</div>
+
+    <button class="menu-button" onclick="handleAction('deposit')">💰 Пополнить</button>
+    <button class="menu-button" onclick="handleAction('withdraw')">💸 Вывести</button>
+    <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Делает WebApp на весь экран
+        tg.expand();
 
         const user = tg.initDataUnsafe.user;
         const infoDiv = document.getElementById("userInfo");
@@ -38,6 +67,20 @@
             `;
         } else {
             infoDiv.innerHTML = "Не удалось получить данные пользователя.";
+        }
+
+        function handleAction(action) {
+            switch (action) {
+                case 'deposit':
+                    tg.showAlert('Вы выбрали "Пополнить"');
+                    break;
+                case 'withdraw':
+                    tg.showAlert('Вы выбрали "Вывести"');
+                    break;
+                case 'profile':
+                    tg.showAlert('Вы выбрали "Личный кабинет"');
+                    break;
+            }
         }
     </script>
 </body>
