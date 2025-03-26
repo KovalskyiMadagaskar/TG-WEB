@@ -4,79 +4,7 @@
     <meta charset="UTF-8">
     <title>Telegram Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 30px;
-        }
-
-        .menu {
-            margin-bottom: 30px;
-        }
-
-        .menu-button {
-            display: block;
-            width: 200px;
-            margin: 10px auto;
-            padding: 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background-color: #0088cc;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .menu-button:hover {
-            background-color: #0077b3;
-        }
-
-        .input-section, .method-section {
-            margin-top: 20px;
-            display: none;
-        }
-
-        input[type="number"] {
-            padding: 10px;
-            font-size: 16px;
-            width: 180px;
-            margin-bottom: 10px;
-        }
-
-        .confirm-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background-color: #00b894;
-            color: white;
-            cursor: pointer;
-        }
-
-        .method-button {
-            display: block;
-            width: 250px;
-            margin: 10px auto;
-            padding: 12px;
-            font-size: 15px;
-            border: none;
-            border-radius: 10px;
-            background-color: #6c5ce7;
-            color: white;
-            cursor: pointer;
-        }
-
-        .method-button:hover {
-            background-color: #5a4dbd;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2>Добро пожаловать! ✨</h2>
@@ -87,14 +15,12 @@
         <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
     </div>
 
-    <!-- Ввод суммы -->
     <div class="input-section" id="amountSection">
         <input type="number" id="amountInput" placeholder="Введите сумму в ₸" />
         <br>
         <button class="confirm-button" onclick="confirmAmount()">Далее</button>
     </div>
 
-    <!-- Выбор метода -->
     <div class="method-section" id="methodSection">
         <h3>Выберите способ</h3>
         <button class="method-button" onclick="submitWithMethod('kaspi')">Каспи</button>
@@ -105,14 +31,12 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let currentAction = ""; // deposit / withdraw
+        let currentAction = "";
         let currentAmount = 0;
 
         function startAction(action) {
             currentAction = action;
             currentAmount = 0;
-
-            // Скрываем меню и всё остальное
             document.getElementById("menuButtons").style.display = "none";
             document.getElementById("amountSection").style.display = "block";
             document.getElementById("methodSection").style.display = "none";
@@ -121,15 +45,11 @@
         function confirmAmount() {
             const input = document.getElementById("amountInput");
             const amount = parseFloat(input.value);
-
             if (!amount || amount <= 0) {
                 tg.showAlert("Введите корректную сумму в тенге");
                 return;
             }
-
             currentAmount = amount;
-
-            // Переход к выбору метода
             document.getElementById("amountSection").style.display = "none";
             document.getElementById("methodSection").style.display = "block";
         }
@@ -138,10 +58,9 @@
             const data = {
                 action: currentAction,
                 amount: currentAmount,
-                method: method, // 'kaspi' или 'card'
+                method: method,
                 currency: "KZT"
             };
-
             tg.sendData(JSON.stringify(data));
             tg.showAlert(`Вы выбрали ${currentAction === 'deposit' ? 'пополнение' : 'вывод'} на ${currentAmount}₸ через ${method === 'kaspi' ? 'Каспи' : 'карту другого банка'}`);
         }

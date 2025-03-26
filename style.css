@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 30px;
+}
+
+.menu {
+    margin-bottom: 30px;
+}
+
+.menu-button {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #0088cc;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+    background-color: #0077b3;
+}
+
+.input-section,
+.method-section {
+    margin-top: 20px;
+    display: none;
+}
+
+input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 180px;
+    margin-bottom: 10px;
+}
+
+.confirm-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #00b894;
+    color: white;
+    cursor: pointer;
+}
+
+.method-button {
+    display: block;
+    width: 250px;
+    margin: 10px auto;
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #6c5ce7;
+    color: white;
+    cursor: pointer;
+}
+
+.method-button:hover {
+    background-color: #5a4dbd;
+}
