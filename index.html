@@ -16,6 +16,10 @@
             margin-bottom: 30px;
         }
 
+        .menu {
+            margin-bottom: 30px;
+        }
+
         .menu-button {
             display: block;
             width: 200px;
@@ -60,18 +64,20 @@
 <body>
     <h2>Добро пожаловать! ✨</h2>
 
-    <button class="menu-button" onclick="showSection('deposit')">💰 Пополнить</button>
-    <button class="menu-button" onclick="showSection('withdraw')">💸 Вывести</button>
-    <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
+    <div class="menu" id="menuButtons">
+        <button class="menu-button" onclick="showSection('deposit')">💰 Пополнить</button>
+        <button class="menu-button" onclick="showSection('withdraw')">💸 Вывести</button>
+        <button class="menu-button" onclick="handleAction('profile')">👤 Личный кабинет</button>
+    </div>
 
     <div class="input-section" id="depositSection">
-        <input type="number" id="depositAmount" placeholder="Введите сумму пополнения" />
+        <input type="number" id="depositAmount" placeholder="Введите сумму в ₸" />
         <br>
         <button onclick="submitDeposit()">Подтвердить</button>
     </div>
 
     <div class="input-section" id="withdrawSection">
-        <input type="number" id="withdrawAmount" placeholder="Введите сумму вывода" />
+        <input type="number" id="withdrawAmount" placeholder="Введите сумму в ₸" />
         <br>
         <button onclick="submitWithdraw()">Подтвердить</button>
     </div>
@@ -81,9 +87,14 @@
         tg.expand();
 
         function showSection(type) {
+            // Скрываем меню кнопок
+            document.getElementById("menuButtons").style.display = "none";
+
+            // Скрываем все input-секции
             document.getElementById("depositSection").style.display = "none";
             document.getElementById("withdrawSection").style.display = "none";
 
+            // Показываем нужную
             if (type === 'deposit') {
                 document.getElementById("depositSection").style.display = "block";
             } else if (type === 'withdraw') {
@@ -98,8 +109,8 @@
                 return;
             }
 
-            tg.sendData(JSON.stringify({ action: "deposit", amount }));
-            tg.showAlert(`Вы хотите пополнить на ${amount}₽`);
+            tg.sendData(JSON.stringify({ action: "deposit", amount, currency: "KZT" }));
+            tg.showAlert(`Вы хотите пополнить на ${amount}₸`);
         }
 
         function submitWithdraw() {
@@ -109,8 +120,8 @@
                 return;
             }
 
-            tg.sendData(JSON.stringify({ action: "withdraw", amount }));
-            tg.showAlert(`Вы хотите вывести ${amount}₽`);
+            tg.sendData(JSON.stringify({ action: "withdraw", amount, currency: "KZT" }));
+            tg.showAlert(`Вы хотите вывести ${amount}₸`);
         }
 
         function handleAction(action) {
